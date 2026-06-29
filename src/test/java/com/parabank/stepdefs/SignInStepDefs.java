@@ -6,7 +6,7 @@ import com.parabank.pages.HomePage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.jupiter.api.Assertions;
+import org.testng.Assert;
 
 /**
  * Step definitions for all Sign-In and Account Overview scenarios.
@@ -37,8 +37,8 @@ public class SignInStepDefs {
         String username = context.getRegisteredUsername();
         String password = context.getRegisteredPassword();
 
-        Assertions.assertNotNull(username, "Registered username must be available in context");
-        Assertions.assertNotNull(password, "Registered password must be available in context");
+        Assert.assertNotNull(username, "Registered username must be available in context");
+        Assert.assertNotNull(password, "Registered password must be available in context");
 
         System.out.println("[INFO] Logging out to reach login form...");
         HomePage homePage = new HomePage(context.getPage());
@@ -66,7 +66,7 @@ public class SignInStepDefs {
         boolean displayed = overviewPage.isDisplayed();
         System.out.println("[INFO] Accounts Overview page displayed: " + displayed);
         // ParaBank shows the overview after successful login; URL contains "overview" or site root
-        Assertions.assertTrue(displayed,
+        Assert.assertTrue(displayed,
                 "User should be on the Accounts Overview page after login. Current URL: "
                         + context.getPage().url());
         System.out.println("[INFO] Confirmed: on Accounts Overview page.");
@@ -78,13 +78,13 @@ public class SignInStepDefs {
         overviewPage.printAccountBalances();
         String total = overviewPage.getTotalBalance();
         System.out.println("[INFO] Total balance retrieved: " + total);
-        Assertions.assertNotNull(total, "Total balance should not be null");
+        Assert.assertNotNull(total, "Total balance should not be null");
     }
 
     @Then("I should see an error message")
     public void iShouldSeeAnErrorMessage() {
         HomePage homePage = new HomePage(context.getPage());
-        Assertions.assertTrue(homePage.isLoginErrorDisplayed(),
+        Assert.assertTrue(homePage.isLoginErrorDisplayed(),
                 "An error message should be displayed for invalid credentials");
         System.out.println("[INFO] Login error message: " + homePage.getLoginErrorText());
     }

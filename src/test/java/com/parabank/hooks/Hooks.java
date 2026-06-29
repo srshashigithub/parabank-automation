@@ -8,14 +8,20 @@ import com.parabank.context.TestContext;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
+import io.qameta.allure.Allure;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * Cucumber Hooks — executed before and after each scenario.
- * Opens a Chromium browser and a fresh page before each scenario;
- * closes everything cleanly after each scenario.
  *
- * TestContext is injected by PicoContainer so the same instance is shared
- * with all step definition classes in the same scenario.
+ * Before: launches a Chromium browser and stores it in TestContext.
+ * After:  attaches a screenshot to the Allure report if the scenario
+ *         failed, then closes the browser and Playwright cleanly.
+ *
+ * TestContext is injected by PicoContainer — the same instance is shared
+ * with all step definition classes in the same scenario, and a brand-new
+ * instance is created for each parallel scenario thread.
  */
 public class Hooks {
 
@@ -50,9 +56,25 @@ public class Hooks {
     @After(order = 0)
     public void tearDown(Scenario scenario) {
         System.out.println("\n╔══════════════════════════════════════════════════╗");
-        System.out.printf ("  FINISHED: %s | Status: %s%n",
+        System.out.printf("  FINISHED: %s | Status: %s%n",
                 scenario.getName(), scenario.getStatus());
         System.out.println("╚══════════════════════════════════════════════════╝\n");
+
+        if (scenario.isFailed() && context.getPage() != null) {
+            try {
+                byte[] screenshot = context.getPage().screenshot(
+                        new Page.ScreenshotOptions().setFullPage(true)
+                );
+                Allure.addAttachment(
+                        "Screenshot — " + scenario.getName(),
+                        "image/png",
+                        new ByteArrayInputStream(screenshot),
+                        "png"
+                );
+            } catch (Exception e) {
+                System.out.println("[WARN] Could not capture screenshot: " + e.getMessage());
+            }
+        }
 
         if (context.getBrowser() != null) {
             context.getBrowser().close();

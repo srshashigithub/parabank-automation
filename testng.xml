@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!--
+  ParaBank TestNG Suite
+  ─────────────────────
+  data-provider-thread-count: number of Cucumber scenarios that run in parallel.
+  Each thread gets its own Playwright Chromium browser (via TestContext + Hooks).
+  Keep this at 3 unless your machine has enough RAM for more browsers.
+
+  To run with a tag filter:
+    mvn test -Dcucumber.filter.tags="@smoke"
+-->
+<suite name="ParaBank Automation Suite"
+       data-provider-thread-count="3"
+       verbose="2">
+
+    <test name="ParaBank BDD Tests">
+        <classes>
+            <class name="com.parabank.runners.TestRunner"/>
+        </classes>
+    </test>
+
+</suite>

@@ -1,22 +1,39 @@
 package com.parabank.runners;
 
-import org.junit.platform.suite.api.IncludeEngines;
-import org.junit.platform.suite.api.SelectClasspathResource;
-import org.junit.platform.suite.api.Suite;
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+import org.testng.annotations.DataProvider;
 
 /**
- * JUnit Platform Suite runner for Cucumber.
+ * TestNG runner for Cucumber BDD scenarios.
  *
- * Configuration is driven by src/test/resources/junit-platform.properties:
- *   - cucumber.glue       → step definitions and hooks packages
- *   - cucumber.plugin     → reporting plugins
- *   - cucumber.features   → feature files classpath location
+ * Parallel execution is enabled via @DataProvider(parallel = true).
+ * Thread count is controlled by testng.xml (data-provider-thread-count="3").
  *
- * Run all tests:   mvn test
- * Run with a tag:  mvn test -Dcucumber.filter.tags="@smoke"
+ * Each scenario gets its own TestContext (injected by PicoContainer),
+ * which holds a dedicated Playwright browser instance — so parallel
+ * scenarios never share browser state.
+ *
+ * Run all tests:          mvn test
+ * Run with a tag filter:  mvn test -Dcucumber.filter.tags="@smoke"
  */
-@Suite
-@IncludeEngines("cucumber")
-@SelectClasspathResource("features")
-public class TestRunner {
+@CucumberOptions(
+        features = "classpath:features",
+        glue     = {"com.parabank.hooks", "com.parabank.stepdefs"},
+        plugin   = {
+                "pretty",
+                "html:target/cucumber-reports/cucumber.html",
+                "json:target/cucumber-reports/cucumber.json",
+                "timeline:target/cucumber-reports/timeline",
+                "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
+        },
+        publish  = false
+)
+public class TestRunner extends AbstractTestNGCucumberTests {
+
+    @Override
+    @DataProvider(parallel = true)
+    public Object[][] scenarios() {
+        return super.scenarios();
+    }
 }

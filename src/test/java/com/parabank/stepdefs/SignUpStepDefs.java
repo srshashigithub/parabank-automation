@@ -4,11 +4,10 @@ import com.parabank.context.TestContext;
 import com.parabank.pages.HomePage;
 import com.parabank.pages.RegisterPage;
 import com.parabank.utils.TestDataGenerator;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.jupiter.api.Assertions;
+import org.testng.Assert;
 
 /**
  * Step definitions for all Registration (Sign-Up) scenarios.
@@ -33,7 +32,7 @@ public class SignUpStepDefs {
     public void iAmOnTheParaBankHomePage() {
         HomePage homePage = new HomePage(context.getPage());
         homePage.navigate();
-        Assertions.assertTrue(homePage.isLoaded(),
+        Assert.assertTrue(homePage.isLoaded(),
                 "ParaBank home page should be loaded successfully");
         System.out.println("[INFO] Navigated to ParaBank home page.");
     }
@@ -57,6 +56,7 @@ public class SignUpStepDefs {
         String password = TestDataGenerator.getDefaultPassword();
 
         System.out.println("[INFO] Registering with username: " + username);
+        System.out.println("[INFO] Registering with password: " + password);
 
         registerPage.fillPersonalDetails(
                 TestDataGenerator.getFirstName(),
@@ -92,7 +92,7 @@ public class SignUpStepDefs {
     @Then("I should be on the registration page")
     public void iShouldBeOnTheRegistrationPage() {
         RegisterPage registerPage = new RegisterPage(context.getPage());
-        Assertions.assertTrue(registerPage.isOnRegisterPage(),
+        Assert.assertTrue(registerPage.isOnRegisterPage(),
                 "User should be redirected to the registration page");
         System.out.println("[INFO] Confirmed: on registration page.");
     }
@@ -100,7 +100,7 @@ public class SignUpStepDefs {
     @Then("I should see a successful registration message")
     public void iShouldSeeASuccessfulRegistrationMessage() {
         RegisterPage registerPage = new RegisterPage(context.getPage());
-        Assertions.assertTrue(registerPage.isRegistrationSuccessful(),
+        Assert.assertTrue(registerPage.isRegistrationSuccessful(),
                 "Expected a successful registration confirmation message");
         System.out.println("[INFO] Registration confirmed. Message: "
                 + registerPage.getWelcomeMessage());
@@ -109,7 +109,7 @@ public class SignUpStepDefs {
     @Then("I should see validation error messages")
     public void iShouldSeeValidationErrorMessages() {
         RegisterPage registerPage = new RegisterPage(context.getPage());
-        Assertions.assertTrue(registerPage.hasValidationErrors(),
+        Assert.assertTrue(registerPage.hasValidationErrors(),
                 "Expected validation error messages for empty form submission");
         System.out.println("[INFO] Validation errors displayed: "
                 + registerPage.getValidationErrorCount() + " error(s).");
