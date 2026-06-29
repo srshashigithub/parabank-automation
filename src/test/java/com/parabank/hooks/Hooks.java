@@ -5,6 +5,7 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.parabank.context.TestContext;
+import com.parabank.utils.ConfigReader;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -41,12 +42,15 @@ public class Hooks {
 
         Browser browser = playwright.chromium().launch(
                 new BrowserType.LaunchOptions()
-                        .setHeadless(false)
-                        .setSlowMo(400)
+                        .setHeadless(ConfigReader.getBoolean("browser.headless"))
+                        .setSlowMo(ConfigReader.getInt("browser.slow.mo"))
         );
 
         Page page = browser.newPage();
-        page.setViewportSize(1366, 768);
+        page.setViewportSize(
+                ConfigReader.getInt("browser.viewport.width"),
+                ConfigReader.getInt("browser.viewport.height")
+        );
 
         context.setPlaywright(playwright);
         context.setBrowser(browser);

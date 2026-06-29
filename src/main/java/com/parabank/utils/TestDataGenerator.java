@@ -4,12 +4,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Utility class that generates test data for the ParaBank registration form.
- * Uses a timestamp suffix on usernames to guarantee uniqueness across test runs.
+ * Generates test data for the ParaBank registration form.
+ * Static values are read from config.properties.
+ * Usernames use a timestamp suffix to guarantee uniqueness across runs.
  */
 public final class TestDataGenerator {
-
-    private static final String DEFAULT_PASSWORD = "Test@1234";
 
     private TestDataGenerator() {}
 
@@ -19,16 +18,13 @@ public final class TestDataGenerator {
         return "testuser" + ts;
     }
 
-    public static String getDefaultPassword() {
-        return DEFAULT_PASSWORD;
-    }
-
-    public static String getFirstName()  { return "Test"; }
-    public static String getLastName()   { return "Automation"; }
-    public static String getAddress()    { return "123 Automation Drive"; }
-    public static String getCity()       { return "San Jose"; }
-    public static String getState()      { return "CA"; }
-    public static String getZipCode()    { return "95101"; }
-    public static String getPhone()      { return "4081234567"; }
-    public static String getSsn()        { return "987654321"; }
+    public static String getDefaultPassword()  { return ConfigReader.get("test.default.password"); }
+    public static String getFirstName()        { return ConfigReader.get("test.first.name"); }
+    public static String getLastName()         { return ConfigReader.get("test.last.name"); }
+    public static String getAddress()          { return ConfigReader.get("test.address"); }
+    public static String getCity()             { return ConfigReader.get("test.city"); }
+    public static String getState()            { return ConfigReader.get("test.state"); }
+    public static String getZipCode()          { return ConfigReader.get("test.zip.code"); }
+    public static String getPhone()            { return ConfigReader.get("test.phone"); }
+    public static String getSsn()              { return ConfigReader.get("test.ssn"); }
 }
